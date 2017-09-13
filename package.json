@@ -1,0 +1,15 @@
+{
+    "name": "chromedev",
+    "version": "1.0.0",
+    "description": "",
+    "main": "init.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "dataframe-js": "*",
+        "q": "*"
+    },
+    "author": "",
+    "license": "ISC"
+}

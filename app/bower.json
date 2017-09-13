@@ -1,0 +1,19 @@
+{
+    "name": "app",
+    "main": "app.js",
+    "description": "",
+    "license": "MIT",
+    "homepage": "",
+    "dependencies": {
+        "jquery": "*",
+        "angularjs": "*",
+        "chart.js":"*"
+    },
+    "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

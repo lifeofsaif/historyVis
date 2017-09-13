@@ -1,0 +1,38 @@
+<head>
+    <title>History Visualization</title>
+    <link rel="icon" href="../icon.png"> </head>
+
+<body ng-app="MainApp" ng-controller="MainController">
+    <input type="text" ng-model="url">
+    <button ng-click="addUrl()">add</button>
+    
+    <div ng-repeat="existingUrl in urls"> {{existingUrl}}
+        <button ng-click="removeUrl(existingUrl)">remove</button>
+    </div>
+    
+    
+    <button ng-click="doTheDance()">do it!</button>
+    
+    
+    <div >
+        <canvas id="canvas" ></canvas>
+    </div>
+    <div >
+        <canvas id="canvas2" ></canvas>
+    </div>
+    <div >
+        <canvas id="canvas3" ></canvas>
+    </div>
+    <div id="scripts">
+        <script src="bower_components/angularjs/angular.min.js"></script>
+        <script src="bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="bower_components/chart.js/dist/Chart.bundle.min.js"></script>
+        
+        <script src="../node_modules/dataframe-js/dist/dataframe-min.js"></script>
+        <script src="../node_modules/q/q.js"></script>
+        
+        <script src="charter.js"></script>
+        <script src="app.js"></script>
+        <script src="history.js"></script>
+    </div>
+</body>
