@@ -2,12 +2,9 @@
 var chromeStorage = chrome.storage.local
 angular.module('MainApp', []).controller('MainController', function ($scope) {
     $scope.urls = ["facebook", "google"]
-    
     $scope.doTheDance = function(){
         doTheDance($scope.urls) 
     }
-    
-    
     chromeStorage.get('urls', function (data) {
         if (data.urls) {
             $scope.urls = data.urls
@@ -15,7 +12,6 @@ angular.module('MainApp', []).controller('MainController', function ($scope) {
         $scope.$apply()
         doTheDance($scope.urls) 
     })
-    
     var updateUrlsToStorage = function () {
         chromeStorage.set({
             urls: $scope.urls

@@ -2,13 +2,12 @@
     
     todo:
     
-    -fix chart x axis labels    
-    -fix chart title
+    -cache config and save it for later in chrome.storage
     
+    -still have bug when query not found
     
     -loading image
     -allow for user to know that their seach was not found
-    -cache config and save it for later in chrome.storage
     -do some UI design
     
 */
