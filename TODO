@@ -2,13 +2,11 @@
     
     todo:
     
-    -cache config and save it for later in chrome.storage
+    BUGS:
+    -query not found
     
-    -still have bug when query not found
-    
-    -loading image
-    -allow for user to know that their seach was not found
     -do some UI design
+    -add only up to N things
     
 */
 

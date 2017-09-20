@@ -1,6 +1,9 @@
 <head>
     <title>History Visualization</title>
     <link rel="icon" href="../icon.png"> </head>
+<link rel="stylesheet" href="style.css">
+
+
 
 <body ng-app="MainApp" ng-controller="MainController">
     <input type="text" ng-model="url">
@@ -11,18 +14,15 @@
     </div>
     
     
-    <button ng-click="doTheDance()">do it!</button>
+    <button id="loadButton" ng-click="doTheDance()">reload</button>
     
-    
-    <div >
-        <canvas id="canvas" ></canvas>
-    </div>
-    <div >
+    <div class="loader"></div>
+    <div class="charts">
+        <canvas id="canvas" ></canvas>    
         <canvas id="canvas2" ></canvas>
-    </div>
-    <div >
         <canvas id="canvas3" ></canvas>
     </div>
+    
     <div id="scripts">
         <script src="bower_components/angularjs/angular.min.js"></script>
         <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -30,7 +30,6 @@
         
         <script src="../node_modules/dataframe-js/dist/dataframe-min.js"></script>
         <script src="../node_modules/q/q.js"></script>
-        
         
         <script src="app.js"></script>
         <script src="history.js"></script>

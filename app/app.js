@@ -1,19 +1,32 @@
 "use strict";
-var chromeStorage = chrome.storage.local
+let chromeStorage = chrome.storage.local
 angular.module('MainApp', []).controller('MainController', function ($scope) {
     $scope.urls = ["facebook", "google"]
+    
+    
     $scope.doTheDance = function(){
+        $(".loader").css("display", "")
+        $(".charts").css("display", "none")
+        $("#loadButton").css("display", "none")    
         doTheDance($scope.urls) 
     }
+    
+    
+    
     chromeStorage.get('urls', function (data) {
         if (data.urls) {
             $scope.urls = data.urls
+            $("#loadButton").css("display", "none")
+            doTheDance(data.urls)
         }
-        $scope.$apply()
-        doTheDance($scope.urls) 
+        $scope.$apply() 
+        
     })
+    
+    
+    
     var updateUrlsToStorage = function () {
-        chromeStorage.set({
+        chrome.storage.local.set({
             urls: $scope.urls
         })
     }

@@ -1,3 +1,6 @@
+
+
+"use strict";
 var DataFrame = dfjs.DataFrame
 let now = new Date(Date.now())
 const lastWeek = new Date(now.getTime() - (60 * 60 * 24 * 7 * 1000));
@@ -182,7 +185,7 @@ function getAllTheDataframes(queries) {
     for (let i = 0; i < queries.length; i++) {
         getTheDataframe(queries[i]).then(function (data) {
             if (data == null) {
-                console.log("nothing was found for your search: " + queries[i])
+                alert("nothing was found for your search: " + queries[i])
                 unfound++
             }
             else {
@@ -199,9 +202,14 @@ function getAllTheDataframes(queries) {
 }
 
 function doTheDance(arr) {
-    getAllTheDataframes(arr).then(function (dataframes) {
-        visualizeThatShit(dataframes)
-    })
+    if(arr.length==0){
+        resetHTML()
+        $(".charts").css("display", "none")
+    }else{
+        getAllTheDataframes(arr).then(function (dataframes) {
+            visualizeCharts(dataframes)
+        })
+    }
 }
 //////////////////
 //////////////////
@@ -214,29 +222,25 @@ let colors = ['rgb(244, 131, 61)', 'rgb(61, 244, 167)', 'rgb(228, 61, 244)', 'rg
 colors.sort(function (a, b) {return 0.5 - Math.random()});
 console.log(colors)
 
-function visualizeThatShit(dataframes) {
-    let monthConfig = visualizeMonths(dataframes)
-    let weekConfig = visualizeWeek(dataframes)
-    let dayConfig = visualizeDay(dataframes)
+function visualizeCharts(dataframes) {
+    let monthConfig = fMonthConfig(dataframes)
+    let weekConfig = fWeekConfig(dataframes)
+    let dayConfig = fDayConfig(dataframes)
+    window.monthLine = new Chart(document.getElementById("canvas").getContext("2d"), getConfigDefault(monthConfig));
+    window.weekLine = new Chart(document.getElementById("canvas2").getContext("2d"), getConfigDefault(weekConfig));
+    window.dayLine = new Chart(document.getElementById("canvas3").getContext("2d"), getConfigDefault(dayConfig));
+    
+    resetHTML()
+    
 }
 
-
-
-function defaultDataSet(label, backgroundColor, borderColor, data){
-    return {
-        label:label
-        , backgroundColor: backgroundColor
-        , borderColor: borderColor
-        , data: data
-        , fill: false
-        , pointRadius: 0
-        , fill: false
-        , lineTension: 0.25
-        , borderWidth: 1.5
-    }
+function resetHTML(){
+    $(".loader").css("display", "none")
+    $(".charts").css("display", "")
+    $("#loadButton").css("display", "")
 }
 
-function visualizeMonths(dataframes) {
+function fMonthConfig(dataframes) {
     let datasets = []
     let x = getArrayOfLast31Days()
     dataframes.forEach(function (arrays, index) {
@@ -247,18 +251,10 @@ function visualizeMonths(dataframes) {
         })
         datasets.push(defaultDataSet(arrays.name, colors[index], colors[index], y))
     })
-    let config = getConfigDefault()
-    config.data = {
-        labels: x
-        , datasets: datasets
-    }
-    config.options.title.text = 'Last 31 Days'
-    let ctx = document.getElementById("canvas").getContext("2d");
-    window.myLine = new Chart(ctx, config);
-    return config
+    return {labels:x, datasets:datasets, title:'Last 31 Days'}
 }
 
-function visualizeWeek(dataframes) {
+function fWeekConfig(dataframes) {
     let datasets = []
     let x = getArrayOfLast7Days()
     dataframes.forEach(function (arrays, index) {
@@ -269,18 +265,9 @@ function visualizeWeek(dataframes) {
         })
         datasets.push(defaultDataSet(arrays.name, colors[index], colors[index], y))
     })
-    let config = getConfigDefault()
-    config.data = {
-        labels: x
-        , datasets: datasets
-    }
-    config.options.title.text = 'Last 7 Days'
-    let ctx = document.getElementById("canvas2").getContext("2d");
-    window.myLine = new Chart(ctx, config);
-    return config
+    return {labels:x, datasets:datasets, title:'Last 7 Days'}
 }
-
-function visualizeDay(dataframes) {
+function fDayConfig(dataframes) {
     let datasets = []
     let x = getArrayOfLast24Hours()
     dataframes.forEach(function (arrays, index) {
@@ -292,105 +279,19 @@ function visualizeDay(dataframes) {
         
         datasets.push(defaultDataSet(arrays.name, colors[index], colors[index], y))
     })
-    let config = getConfigDefault()
-    config.data = {
-        labels: x
-        , datasets: datasets
-    }
-    config.options.title.text = 'Last 24 Hours'
-    let ctx = document.getElementById("canvas3").getContext("2d");
-    window.myLine = new Chart(ctx, config);
-    return config
+    return {labels:x, datasets:datasets, title:'Last 24 Hours'}
 }
-
-function getArrayOfLast31Days() {
-    let x = []
-    let _month = Date.now() - (1000*60*60*24*30)
-    let _day = (1000*60*60*24)
-    for (let i = 1; i <= 31; i++) {
-        //x.push((new Date(lastThirtyOneDays.getTime() + (1000 * 60 * 60 * 24) * i)).getDate())
-        let _thatDay = new Date(_month)
-        x.push(monthToReadable(_thatDay.getMonth())+"/"+_thatDay.getDate())
-        _month = _month + _day        
-        
-    }
-    return x
-}
-
-
-function monthToReadable(month) {
-    return month + 1
-}
-
-
-
-function getArrayOfLast7Days() {
-    let x = []
-    for (let i = 1; i <= 7; i++) {
-        x.push(dayToReadable((new Date(lastWeek.getTime() + (1000 * 60 * 60 * 24) * i)).getDay()))
-    }
-    return x
-}
-
-function dayToReadable(day) {
-    switch (day) {
-    case 0:
-        return "Sunday"
-        break;
-    case 1:
-        return "Monday"
-        break;
-    case 2:
-        return "Tuesday"
-        break;
-    case 3:
-        return "Wednesday"
-        break;
-    case 4:
-        return "Thursday"
-        break;
-    case 5:
-        return "Friday"
-        break;
-    case 6:
-        return "Saturday"
-        break;
-    }
-}
-
-function getArrayOfLast24Hours() {
-    let x = []
-    let _week = Date.now()
-    _week = _week - (1000 * 60 * 60 * 23)
-    for (let i = 0; i < 24; i++) {
-        x.push(hourToReadable((new Date(_week)).getHours()))
-        _week = _week + (1000 * 60 * 60)
-    }
-    return x
-}
-
-function hourToReadable(hour) {
-    if (hour == 0) {
-        return "Midnight"
-    }
-    else if (hour >= 1 && hour <= 11) {
-        return hour + "AM"
-    }
-    else if (hour == 12) {
-        return "Noon"
-    }
-    else if (hour >= 13 && hour <= 23) {
-        return (hour - 12) + "PM"
-    }
-}
-
-function getConfigDefault() {
+function getConfigDefault(data) {
     return {
         type: 'line'
+        , data: { labels: data.labels
+                , datasets: data.datasets
+                }
         , options: {
             responsive: true
             , title: {
-                display: true
+                text: data.title
+                , display: true
             }
             , tooltips: {
                 mode: 'index'
@@ -418,4 +319,90 @@ function getConfigDefault() {
             }
         }
     };
+}
+
+function defaultDataSet(label, backgroundColor, borderColor, data){
+    return {
+        label:label
+        , backgroundColor: backgroundColor
+        , borderColor: borderColor
+        , data: data
+        , fill: false
+        , pointRadius: 0
+        , fill: false
+        , lineTension: 0.25
+        , borderWidth: 1.5
+    }
+}
+function getArrayOfLast31Days() {
+    let x = []
+    let _month = Date.now() - (1000*60*60*24*30)
+    let _day = (1000*60*60*24)
+    for (let i = 1; i <= 31; i++) {
+        //x.push((new Date(lastThirtyOneDays.getTime() + (1000 * 60 * 60 * 24) * i)).getDate())
+        let _thatDay = new Date(_month)
+        x.push(monthToReadable(_thatDay.getMonth())+"/"+_thatDay.getDate())
+        _month = _month + _day        
+        
+    }
+    return x
+}
+function monthToReadable(month) {
+    return month + 1
+}
+function getArrayOfLast7Days() {
+    let x = []
+    for (let i = 1; i <= 7; i++) {
+        x.push(dayToReadable((new Date(lastWeek.getTime() + (1000 * 60 * 60 * 24) * i)).getDay()))
+    }
+    return x
+}
+function dayToReadable(day) {
+    switch (day) {
+    case 0:
+        return "Sunday"
+        break;
+    case 1:
+        return "Monday"
+        break;
+    case 2:
+        return "Tuesday"
+        break;
+    case 3:
+        return "Wednesday"
+        break;
+    case 4:
+        return "Thursday"
+        break;
+    case 5:
+        return "Friday"
+        break;
+    case 6:
+        return "Saturday"
+        break;
+    }
+}
+function getArrayOfLast24Hours() {
+    let x = []
+    let _week = Date.now()
+    _week = _week - (1000 * 60 * 60 * 23)
+    for (let i = 0; i < 24; i++) {
+        x.push(hourToReadable((new Date(_week)).getHours()))
+        _week = _week + (1000 * 60 * 60)
+    }
+    return x
+}
+function hourToReadable(hour) {
+    if (hour == 0) {
+        return "Midnight"
+    }
+    else if (hour >= 1 && hour <= 11) {
+        return hour + "AM"
+    }
+    else if (hour == 12) {
+        return "Noon"
+    }
+    else if (hour >= 13 && hour <= 23) {
+        return (hour - 12) + "PM"
+    }
 }
