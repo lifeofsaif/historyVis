@@ -121,13 +121,12 @@ IT IS VERY LIKELY TO BE IN HERE
 */
 function getTheDataframe(name) {
     let mainDfPromise = Q.defer()
-
+    
     function searchHistory() {
         let deferred = Q.defer()
         chrome.history.search({
             text: name
         }, function (searchResults) {
-            console.log(searchResults.length)
             if (searchResults.length === 0) {
                 mainDfPromise.resolve(null)
             }
@@ -206,7 +205,9 @@ function doTheDance(arr) {
         resetHTML()
         $(".charts").css("display", "none")
     }else{
+        console.log("processing data")
         getAllTheDataframes(arr).then(function (dataframes) {
+            
             visualizeCharts(dataframes)
         })
     }
@@ -220,7 +221,7 @@ let colors = ['rgb(244, 131, 61)', 'rgb(61, 244, 167)', 'rgb(228, 61, 244)', 'rg
 
 
 colors.sort(function (a, b) {return 0.5 - Math.random()});
-console.log(colors)
+
 
 function visualizeCharts(dataframes) {
     let monthConfig = fMonthConfig(dataframes)

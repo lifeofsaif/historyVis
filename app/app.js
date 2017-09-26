@@ -8,10 +8,13 @@ angular.module('MainApp', []).controller('MainController', function ($scope) {
         $(".loader").css("display", "")
         $(".charts").css("display", "none")
         $("#loadButton").css("display", "none")    
+        
+        window.monthLine = 0;
+        window.weekLine = 0;
+        window.dayLine = 0; 
+        
         doTheDance($scope.urls) 
     }
-    
-    
     
     chromeStorage.get('urls', function (data) {
         if (data.urls) {
@@ -19,8 +22,7 @@ angular.module('MainApp', []).controller('MainController', function ($scope) {
             $("#loadButton").css("display", "none")
             doTheDance(data.urls)
         }
-        $scope.$apply() 
-        
+        $scope.$apply()     
     })
     
     
